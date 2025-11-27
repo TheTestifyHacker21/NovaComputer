@@ -1,0 +1,47 @@
+[
+  {
+    "batchNo": "B001",
+    "itemNo": "I001",
+    "itemName": "Paracetamol 500mg",
+    "description": "Pain reliever and fever reducer.",
+    "quantity": 100,
+    "expiryDate": "2025-12-31",
+    "unitPrice": 2.50
+  },
+  {
+    "batchNo": "B002",
+    "itemNo": "I002",
+    "itemName": "Amoxicillin 250mg",
+    "description": "Antibiotic for bacterial infections.",
+    "quantity": 50,
+    "expiryDate": "2024-06-15",
+    "unitPrice": 5.00
+  },
+  {
+    "batchNo": "B003",
+    "itemNo": "I003",
+    "itemName": "Ibuprofen 200mg",
+    "description": "Non-steroidal anti-inflammatory drug (NSAID).",
+    "quantity": 75,
+    "expiryDate": "2025-03-10",
+    "unitPrice": 3.00
+  },
+  {
+    "batchNo": "B004",
+    "itemNo": "I004",
+    "itemName": "Cetirizine 10mg",
+    "description": "Antihistamine for allergies.",
+    "quantity": 120,
+    "expiryDate": "2026-01-01",
+    "unitPrice": 1.75
+  },
+  {
+    "batchNo": "B005",
+    "itemNo": "I005",
+    "itemName": "Omeprazole 20mg",
+    "description": "Proton pump inhibitor for acid reflux.",
+    "quantity": 80,
+    "expiryDate": "2024-11-20",
+    "unitPrice": 4.25
+  }
+]

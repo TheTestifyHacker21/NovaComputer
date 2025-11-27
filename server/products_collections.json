@@ -1,0 +1,30 @@
+[{
+  "pcode": 333,
+  "category": "IPhone",
+  "pname": "Iphone 16",
+  "price": 660.4,
+  "imgUrl": "https://static1.xdaimages.com/wordpress/wp-content/uploads/2023/09/iphone-16-pro-hero-page.jpg?q=50&fit=contain&w=1140&h=&dpr=1.5"
+},
+{
+  "pcode": 222,
+  "category": "IPhone",
+  "pname": "Iphone 15 pro Max",
+  "price": 550.2,
+  "imgUrl": "https://www.notebookcheck.net/fileadmin/_processed_/4/d/csm_Bild_Apple_iPhone_15_Pro_Max-Intro_b632e0fbb1.jpg"
+},
+{
+ 
+  "pcode": 111,
+  "category": "Samsung",
+  "pname": "Samsung 21S Ultra",
+  "price": 550,
+  "imgUrl": "https://www.apple.com/newsroom/images/product/iphone/geo/Apple-iPhone-14-iPhone-14-Plus-hero-220907-geo_Full-Bleed-Image.jpg.large.jpg"
+},
+{
+  "pcode": 234,
+  "category": "Iphone",
+  "pname": "Iphone 13",
+  "price": 455,
+  "imgUrl": "https://pimcdn.sharafdg.com/cdn-cgi/image/width=600,height=600,fit=pad/images/iphone_15_pink_1?1712248574?g=0"
+
+}]
