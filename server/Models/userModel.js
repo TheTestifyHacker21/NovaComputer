@@ -5,8 +5,11 @@ const UserSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   profilepic: { type: String, required: false },
-});
+},
+{ versionKey: false }
 
-const UserModel = mongoose.model("users", UserSchema, "users");
+);
+
+const UserModel = mongoose.model("Novausers", UserSchema, "Novausers");
 
 export default UserModel;

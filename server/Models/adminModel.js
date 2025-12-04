@@ -8,6 +8,6 @@ const adminSchema = mongoose.Schema(
   { versionKey: false }
 );
 
-const adminModel = mongoose.model("admin", adminSchema, "admin");
+const adminModel = mongoose.model("Novaadmin", adminSchema, "Novaadmin");
 
 export default adminModel;

@@ -1,8 +1,6 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-
-
 import adminModel from "./Models/adminModel.js";
 import ordersModel from "./Models/ordersModel.js";
 import prodModel from "./Models/productModel.js";
@@ -16,6 +14,7 @@ mongoose.connect(
   "mongodb+srv://admin:admin1234@cluster.0jpgmx8.mongodb.net/NovaComputers?retryWrites=true&w=majority&appName=Cluster"
 );
 
+
 let myApp = express();
 myApp.use(cors());
 myApp.use(express.json());
@@ -24,7 +23,7 @@ myApp.use(express.json());
 
 myApp.post("/login",async(req,res)=>{
     try{
-        const user=await UserModel.findOne({email:req.body.email});
+        const user = await UserModel.findOne({email:req.body.email});
         if(!user)
             res.status(500).json({message:"User not found"});
         else{
@@ -69,9 +68,6 @@ myApp.post("/register",async(req,res)=>{
 
 
 
-
-
-
 myApp.get("/products", async (req, res) => {
   try {
     const products = await prodModel.find();
@@ -84,19 +80,69 @@ myApp.get("/products", async (req, res) => {
 
 
 
-myApp.get("/products/:pcode", async (req, res) => {
+
+myApp.get("/newusers", async (req, res) => {
   try {
-    const pcode = req.params.pcode;
-    const product = await prodModel.findOne({ pcode: Number(pcode) });
-    if (!product) {
-      return res.status(500).json({ message: "Product not found" });
-    }
-    res.status(200).json(product);
+    const users = await UserModel.find();
+    res.status(200).json(users);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error fetching product" });
+    res.status(500).json({ message: "Server error, please try again later" });
   }
 });
+
+
+
+
+
+myApp.post("/bulk", async (req, res) => {
+  try {
+    const users = req.body; 
+    const inserted = await UserModel.insertMany(users);
+    res.status(201).json(inserted);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+
+
+myApp.delete("/allusers", async (req, res) => {
+  try {
+    const result = await UserModel.deleteMany({});
+    
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "No users found to delete." });
+    }
+    
+    res.status(200).json({ 
+      message: `Successfully deleted ${result.deletedCount} user(s).`,
+      deletedCount: result.deletedCount
+    });
+
+  } catch (error) {
+    console.error("Error deleting users:", error);
+    res.status(500).json({ message: "Server error, please try again later." });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -124,6 +170,7 @@ myApp.post("/addProduct", async (req, res) => {
     res.status(500).json({ message: "Server error, please try again" });
   }
 });
+
 
 
 
@@ -209,59 +256,6 @@ myApp.get("/username/:user", async (req, res) => {
 
 
 
-myApp.post("/basket/add", async (req, res) => {
-  try {
-    const item = new basketModel(req.body);
-    await item.save();
-    res.status(201).json({ message: "Product added to basket successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error adding product to basket" });
-  }
-});
-
-
-myApp.get("/basket", async (req, res) => {
-  try {
-    const basketItems = await basketModel.find();
-    res.json(basketItems);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching basket items" });
-  }
-});
-
-
-
-myApp.delete("/basket/delete/:itemId", async (req, res) => {
-  try {
-    const { itemId } = req.params;
-    await basketModel.findByIdAndDelete(itemId);
-    res.status(200).json({ message: "Basket item deleted successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error deleting basket item" });
-  }
-});
-
-
-
-myApp.put("/basket/update/:itemId", async (req, res) => {
-  try {
-    const { itemId } = req.params;
-    const { quantity } = req.body;
-    await basketModel.findByIdAndUpdate(itemId, { quantity });
-    res
-      .status(200)
-      .json({ message: "Basket item quantity updated successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error updating basket item quantity" });
-  }
-});
-
-
-
 myApp.post("/checkout", async (req, res) => {
   try {
     const payment = new checkoutModel(req.body);
@@ -300,44 +294,6 @@ myApp.post("/checkout", async (req, res) => {
   }
 });
 
-
-
-myApp.post("/signup", async (req, res) => {
-  const { username, password, email, address } = req.body;
-  try {
-    const existingUser = await UserModel.findOne({ username });
-    if (existingUser) {
-      return res.status(400).json({ message: "Username already exists" });
-    }
-
-    const newUser = new UserModel({ username, password, email, address });
-    await newUser.save();
-    res.status(201).json({ message: "User  created successfully!" });
-  } catch (error) {
-    console.error("Error during signup:", error);
-    res.status(500).json({ message: "Error creating user" });
-  }
-});
-
-
-
-myApp.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    const user = await UserModel.findOne({ username });
-    if (!user) {
-      return res.status(400).json({ message: "User  not found" });
-    }
-
-    if (password !== user.password) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
-    res.json({ message: "Login successful!" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
-});
 
 
 
@@ -414,28 +370,11 @@ myApp.put("/userProfile/:user", async (req, res) => {
 
 
 
-myApp.delete("/userProfile/:order", async (req, res) => {
-  try {
-    const { order } = req.params;
-    const deletedOrder = await ordersModel.findOneAndDelete({
-      orderId: Number(order),
-    });
-    if (deletedOrder) {
-      console.log(`order deleted ${deletedOrder}`);
-      res
-        .status(200)
-        .json({ message: "Order deleted successfully", deletedOrder });
-    } else {
-      res.status(404).json({ message: "Order not Found" });
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server Error, Pleas try again" });
-  }
+
+myApp.listen(4040, () => {
+  console.log("Server started at 4040.. ✅✅");
 });
 
 
 
-myApp.listen(4030, () => {
-  console.log("Server started at 5000.. ✅✅");
-});
+

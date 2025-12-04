@@ -11,6 +11,6 @@ const ordersSchema = mongoose.Schema(
   { versionKey: false }
 );
 
-const ordersModel = mongoose.model('orders', ordersSchema , 'orders');
+const ordersModel = mongoose.model('Novaorders', ordersSchema , 'Novaorders');
 
 export default ordersModel;

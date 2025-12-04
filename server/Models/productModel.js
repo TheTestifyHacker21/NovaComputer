@@ -38,5 +38,5 @@ const prodSchema = mongoose.Schema({
 },
 { versionKey: false });
 
-const prodModel = mongoose.model("products", prodSchema, "products");
+const prodModel = mongoose.model("Novaproducts", prodSchema, "Novaproducts");
 export default prodModel;
