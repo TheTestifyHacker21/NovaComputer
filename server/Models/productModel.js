@@ -6,11 +6,6 @@ import mongoose from "mongoose";
 // );
 
 const prodSchema = mongoose.Schema({
-  pcode: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
   category: {
     type: String,
     default: "Electronics",

@@ -27,6 +27,11 @@ body{
 }
 
 
+#alllinks a.no-underline:hover {
+  color: inherit;
+  border-bottom: none;
+}
+
 
 input#searchtext.form-control {
   color: rgb(255, 255, 255);

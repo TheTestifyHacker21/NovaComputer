@@ -8,7 +8,7 @@ const Navbar = () => {
 
   const [isLogedin, setIsLoggedIn] = useState(false);
 
-  const isLogedinRedux = useSelector((state) => state.users.isLogedin);
+  const [AdminisLogedin, setAdminIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
 
@@ -16,16 +16,28 @@ const Navbar = () => {
   const handleLogout = () => {
         localStorage.removeItem('userData');
         document.cookie = "isLogedin=false; path=/;";
+        document.cookie = "AdminisLogedin=false; path=/;";
         navigate("/");
-        window.location.reload();
     }
 
 
+useEffect(() => {
 
-  useEffect(() => {
-    let isLogedinChk = document.cookie.includes("isLogedin=true") ? true : false;
-    setIsLoggedIn(isLogedinChk);
-  }, []);
+  let isLogedinChk = document.cookie.includes("isLogedin=true");
+  setIsLoggedIn(isLogedinChk);
+
+  let isadminLogedinChk = document.cookie.includes("AdminisLogedin=true");
+  setAdminIsLoggedIn(isadminLogedinChk);
+
+
+}, [isLogedin , AdminisLogedin]);
+
+
+
+let whereHref = AdminisLogedin ? "/AdminDashboard" : isLogedin ? "/profile" : "/login";
+
+
+
 
 
   return (
@@ -86,19 +98,19 @@ const Navbar = () => {
               Contact
             </a>
             <a
-              className="btn px-3"
-              href={isLogedinRedux || isLogedin ? "/profile" : "/login"}
+              className="btn px-3 no-underline"
+              href={whereHref}
               style={{
                 backgroundColor: "#2563EB",
                 color: "white",
                 fontWeight: "600",
               }}
             >
-              {isLogedinRedux || isLogedin ? "Profile" : "Login"}
+              {isLogedin || AdminisLogedin ? "Profile" : "Login"}
             </a>
 
               {
-              isLogedinRedux || isLogedin ? 
+              isLogedin || AdminisLogedin ? 
               <button
               className="btn px-3 ms-2 btn-danger"
               onClick={handleLogout}

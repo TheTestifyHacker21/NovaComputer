@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -15,7 +15,7 @@ import {
   Form,
   FormGroup,
   Label,
-  Alert
+  Alert,
 } from "reactstrap";
 import { FaSearch, FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,7 +26,7 @@ import {
   deleteProduct,
 } from "../features/ProductSlice";
 
-const Stores = () => {
+const AdminDashboard = () => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.products.products);
   const message = useSelector((state) => state.products.message);
@@ -49,22 +49,18 @@ const Stores = () => {
 
   const [condition, setCondition] = useState("new");
 
-
   const [show, setShow] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
-  
+
   const onClose = () => setShow(false);
-
-
 
   useEffect(() => {
     dispatch(getProducts());
-    if (message ) {
-
+    if (message) {
       setAlertMsg(message);
       setShow(true);
     }
-  }, [dispatch , message]);
+  }, [dispatch, message]);
 
   const categories = [
     "All",
@@ -151,35 +147,30 @@ const Stores = () => {
     toggleModal();
   };
 
-
-
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
-        dispatch(deleteProduct(id));
+      dispatch(deleteProduct(id));
     }
-};
-
+  };
 
   return (
     <div className="min-vh-100 d-flex align-items-center justify-content-center mt-5 mb-5">
-
       <Alert
-                color="success"
-                isOpen={show}
-                fade={true}
-                toggle={onClose}
-                style={{
-                    position: "fixed",
-                    bottom: "3rem", 
-                    left: "50%", 
-                    transform: "translateX(-50%)", 
-                    minWidth: "250px",
-                    textAlign: "center",
-                }}
-            >
-                {alertMsg}
-            </Alert>
-
+        color="success"
+        isOpen={show}
+        fade={true}
+        toggle={onClose}
+        style={{
+          position: "fixed",
+          bottom: "3rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+          minWidth: "250px",
+          textAlign: "center",
+        }}
+      >
+        {alertMsg}
+      </Alert>
 
       <Container
         style={{ backgroundColor: "#0F172A", padding: 40, borderRadius: 15 }}
@@ -258,7 +249,11 @@ const Stores = () => {
                       >
                         <FaEdit color="#0F172A" />
                       </Button>
-                      <Button color="danger" size="sm" onClick={() => handleDelete(p._id)}>
+                      <Button
+                        color="danger"
+                        size="sm"
+                        onClick={() => handleDelete(p._id)}
+                      >
                         <FaTrash />
                       </Button>
                     </td>
@@ -388,4 +383,4 @@ const Stores = () => {
   );
 };
 
-export default Stores;
+export default AdminDashboard;

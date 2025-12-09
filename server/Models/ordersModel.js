@@ -2,11 +2,13 @@ import mongoose from "mongoose";
 
 const ordersSchema = mongoose.Schema(
   {
-    Useremail: { type: String, required: true },
-    prodName: { type: String, required: true },
+    email: { type: String, required: true },
+    pid: { type: String, required: true },
     OrderDate: { type: Date, required: true },
     price: { type: Number, required: true },
-    amount: { type: Number, required: true },
+    qty: { type: Number, required: true },
+    address: { type: String, required: true },
+    city: { type: String, required: true },
   },
   { versionKey: false }
 );

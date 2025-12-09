@@ -78,7 +78,7 @@ const Contact = () => {
                         type="text" 
                         className="form-control border-dark text-white"
                         placeholder="Your name"
-                        style={{backgroundColor : "#6a83a6ff" }}
+                        style={{backgroundColor : "#c1cbdaff" }}
                       />
                     </div>
                     
@@ -88,7 +88,7 @@ const Contact = () => {
                         type="email" 
                         className="form-control border-dark text-white"
                         placeholder="Your email"
-                        style={{backgroundColor : "#6a83a6ff" }}
+                        style={{backgroundColor : "#c1cbdaff" }}
                       />
                     </div>
                     
@@ -98,7 +98,7 @@ const Contact = () => {
                         className="form-control border-dark text-white"
                         rows="6"
                         placeholder="Your message"
-                        style={{backgroundColor : "#6a83a6ff" }}
+                        style={{backgroundColor : "#c1cbdaff" }}
                       ></textarea>
                     </div>
                     

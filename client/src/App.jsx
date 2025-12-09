@@ -8,6 +8,10 @@ import Footer from './components/Footer';
 import Login from './components/Login';
 import Register from './components/Register';
 import Profile from './components/Profile';
+import ProductInfo from './components/productInfo';
+import Payment from './components/Payment';
+import AdminLogin from './components/adminLogin';
+import AdminDashboard from './components/AdminDashboard';
 import "./App.css";
 
 
@@ -27,8 +31,12 @@ function App() {
             <Route path="/Products" element={<Products />} />
             <Route path="/Stores" element={<Stores />} />
             <Route path="/Login" element={<Login />} />
+            <Route path="/AdminLogin" element={<AdminLogin />} />
             <Route path="/Register" element={<Register />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/Payment" element={<Payment />} />
+            <Route path="/AdminDashboard" element={<AdminDashboard />} />
+            <Route path="/ProductInfo/:productId" element={<ProductInfo />} />
           </Routes>
       </Router>
       <Footer />

@@ -5,17 +5,21 @@ import { useNavigate } from "react-router-dom";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import { MdOutlineShoppingCart } from "react-icons/md";
 
-
 const Products = () => {
-
   const products = useSelector((state) => state.products.products);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [filter, setFilter] = useState("All");
 
   const [modal, setModal] = useState(false);
-  const toggle = () => setModal(!modal);
 
+  const toggle = () => {
+    setModal(!modal);
+  };
+
+  const goToPayment = () => {
+    navigate("/payment");
+  };
 
   const [cart, setCart] = useState(() => {
     const saved = localStorage.getItem("cart");
@@ -23,13 +27,13 @@ const Products = () => {
   });
 
 
-
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
 
-  const handleCardClick = (productId) => {
-    navigate(`/product/${productId}`);
+  
+  const handleItemClick = (productId) => {
+    navigate(`/productInfo/${productId}`);
   };
 
   const filteredProducts =
@@ -48,7 +52,6 @@ const Products = () => {
     "Cooling",
     "Case",
   ];
-
 
   return (
     <div className="container py-5">
@@ -70,9 +73,9 @@ const Products = () => {
         ))}
 
         <div className="d-flex" style={{ marginLeft: "300px" }}>
-          <button className="btn btn-primary" onClick={toggle}>
+          <Button color="primary" onClick={toggle}>
             <MdOutlineShoppingCart /> Cart
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -81,11 +84,17 @@ const Products = () => {
           <div key={product._id} className="col-md-6 col-lg-4 col-xl-3">
             <div
               className="product-card"
-              onClick={() => handleCardClick(product._id)}
+              onClick={() => handleItemClick(product._id)}
               style={{ cursor: "pointer" }}
             >
               <div className="product-image p-3">
-                <img src={product.imgUrl} alt={product.pname} width={200} height={150} loading="lazy"/>
+                <img
+                  src={product.imgUrl}
+                  alt={product.pname}
+                  width={200}
+                  height={150}
+                  loading="lazy"
+                />
               </div>
               <div className="p-3">
                 <div className="category">{product.category}</div>
@@ -100,7 +109,6 @@ const Products = () => {
           </div>
         ))}
 
-
         <Modal isOpen={modal} toggle={toggle} centered="true" size="lg">
           <ModalHeader
             toggle={toggle}
@@ -108,13 +116,26 @@ const Products = () => {
           >
             Shopping Cart
           </ModalHeader>
-          <ModalBody style={{backgroundColor: "#3f4f72ff", color: "white"}}>
-            {cart.length === 0 ? ( <p>Your cart is empty</p> ) 
-            : (cart.map((item) => (
+          <ModalBody style={{ backgroundColor: "#3f4f72ff", color: "white" }}>
+            {cart.length === 0 ? (
+              <p>Your cart is empty</p>
+            ) : (
+              cart.map((item) => (
                 <div
                   key={item._id}
                   className="d-flex justify-content-between mb-2"
                 >
+                  <div>
+                    <img
+                      src={item.imgUrl}
+                      alt={item.pname}
+                      className="img-fluid rounded"
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                      }}
+                    />
+                  </div>
                   <span>
                     {item.pname} (x{item.qty})
                   </span>
@@ -122,15 +143,16 @@ const Products = () => {
                 </div>
               ))
             )}
-
-
           </ModalBody>
           <ModalFooter style={{ backgroundColor: "#3f4f72ff" }}>
-
-            <Button color="primary" onClick={toggle} disabled={cart.length === 0} style={{ width: "100%" }}>
+            <Button
+              color="primary"
+              onClick={goToPayment}
+              disabled={cart.length === 0}
+              style={{ width: "100%" }}
+            >
               Proceed to Payment
             </Button>
-
           </ModalFooter>
         </Modal>
       </div>

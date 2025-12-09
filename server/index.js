@@ -81,7 +81,20 @@ myApp.get("/products", async (req, res) => {
 
 
 
-myApp.get("/newusers", async (req, res) => {
+myApp.get("/unsetpcode", async (req, res) => {
+  try {
+    const products = await prodModel.updateMany({}, { $unset: { pcode: "" } });
+    res.send(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error, please try again later" });
+  }
+});
+
+
+
+
+myApp.get("/allusers", async (req, res) => {
   try {
     const users = await UserModel.find();
     res.status(200).json(users);
@@ -93,15 +106,13 @@ myApp.get("/newusers", async (req, res) => {
 
 
 
-
-
-myApp.post("/bulk", async (req, res) => {
+myApp.get("/alladmin", async (req, res) => {
   try {
-    const users = req.body; 
-    const inserted = await UserModel.insertMany(users);
-    res.status(201).json(inserted);
+    const users = await adminModel.find();
+    res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Server error, please try again later" });
   }
 });
 
@@ -109,40 +120,78 @@ myApp.post("/bulk", async (req, res) => {
 
 
 
-myApp.delete("/allusers", async (req, res) => {
-  try {
-    const result = await UserModel.deleteMany({});
-    
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ message: "No users found to delete." });
+myApp.post("/adminlogin",async(req,res)=>{
+    try{
+        const admin = await adminModel.findOne({adminemail:req.body.adminemail});
+        if(!admin)
+            res.status(500).json({message:"Admin not found"});
+        else{
+            const pass_valid = await bcrypt.compare(req.body.password , admin.password);
+            if(pass_valid)
+                res.status(200).json({admin:admin,message:"success"});
+            else
+                res.status(401).json({message:"Unauthorized admin"});
+        }
     }
-    
-    res.status(200).json({ 
-      message: `Successfully deleted ${result.deletedCount} user(s).`,
-      deletedCount: result.deletedCount
-    });
+    catch(error)
+    {
+        res.send({message:"An error occurred" , theerror:error});
+    }
+});
+
+
+
+
+
+
+myApp.post("/adminregister",async(req,res)=>{
+    try{
+        const user=await adminModel.findOne({adminemail:req.body.adminemail});
+        if(user)
+            res.status(401).json({message:"admin already exists"});
+        else{
+            const hpass = await bcrypt.hash(req.body.password,10);
+            const newuser = new adminModel({
+                adminemail:req.body.adminemail,
+                password:hpass,
+            });
+            await newuser.save();
+            res.send({message:"Admin Registered.."});
+        }
+        
+    }
+    catch(error){
+       res.send({message:"An error occurred" , theerror:error});
+    }
+});
+
+
+
+
+
+
+
+
+
+
+myApp.put('/products/:id', async (req, res) => {
+  try {
+    const updatedProduct = await prodModel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }  
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.json({ message: "Product updated successfully!", product: updatedProduct  });
 
   } catch (error) {
-    console.error("Error deleting users:", error);
     res.status(500).json({ message: "Server error, please try again later." });
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -150,7 +199,6 @@ myApp.post("/addProduct", async (req, res) => {
   try {
 
     const newProduct = new prodModel({
-      pcode: req.body.pcode,
       category: req.body.category,
       pname: req.body.pname,
       pinformation: req.body.pinformation,
@@ -174,27 +222,6 @@ myApp.post("/addProduct", async (req, res) => {
 
 
 
-myApp.delete("/product/:pcode", async (req, res) => {
-  try {
-    const pcode = req.params.pcode;
-    const deletedProduct = await prodModel.findOneAndDelete({
-      pcode: Number(pcode),
-    });
-    if (deletedProduct) {
-      console.log(`Product deleted ${deletedProduct}`);
-      res
-        .status(200)
-        .json({ message: "Product deleted successfully"});
-    } else {
-      res.status(404).json({ message: "Product not Found" });
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server Error, Pleas try again" });
-  }
-});
-
-
 
 myApp.put("/productUpdate/:pcode", async (req, res) => {
   try {
@@ -208,7 +235,7 @@ myApp.put("/productUpdate/:pcode", async (req, res) => {
     );
 
     if (updatedProduct) {
-      console.log(`Product updated: ${JSON.stringify(updatedProduct)}`);
+      console.log(`Product updated:`);
       res.status(200).json({ message: "Product updated successfully", updatedProduct });
     } else {
       res.status(404).json({ message: "Product not found" });
@@ -218,6 +245,8 @@ myApp.put("/productUpdate/:pcode", async (req, res) => {
     res.status(500).json({ message: "Server error, please try again later" });
   }
 });
+
+
 
 
 
@@ -233,64 +262,6 @@ myApp.get("/orders/:user", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error, please try again" });
-  }
-});
-
-
-
-
-myApp.get("/username/:user", async (req, res) => {
-  try {
-    const user = req.params.user;
-    const username = await UserModel.findOne({ username: user });
-    if (username) {
-      res.json(username);
-    } else {
-      res.status(404).json({ message: "user not found" });
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error, please try again" });
-  }
-});
-
-
-
-myApp.post("/checkout", async (req, res) => {
-  try {
-    const payment = new checkoutModel(req.body);
-    await payment.save();
-
-    const { userId, items } = req.body;
-
-    const basketItems = await basketModel.find({ userId: userId });
-
-    const orders = await Promise.all(
-      basketItems.map(async (basketItem) => {
-        const product = await prodModel.findOne({
-          prodId: basketItem.productId,
-        });
-        return {
-          user: userId,
-          orderId: Math.floor(Math.random() * 10000),
-          prodName: product.prodName,
-          date: new Date(),
-          price: product.price,
-          amount: basketItem.quantity,
-        };
-      })
-    );
-
-    await ordersModel.insertMany(orders);
-
-    await basketModel.deleteMany({ userId: userId });
-
-    res.status(201).json({ message: "Payment successful and order saved" });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ message: "Error processing payment and saving order" });
   }
 });
 
@@ -314,57 +285,6 @@ myApp.post("/loginAdmin", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
-  }
-});
-
-
-
-myApp.post("/reset-password", async (req, res) => {
-  const { email, newPassword } = req.body;
-  try {
-    const user = await UserModel.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: "email  not found" });
-    }
-
-    user.password = newPassword;
-    await user.save();
-
-    res.json({ message: "Password reset successful!" });
-  } catch (error) {
-    console.error("Error during password reset:", error);
-    res.status(500).json({ message: "Error resetting password" });
-  }
-});
-
-
-
-myApp.put("/userProfile/:user", async (req, res) => {
-  try {
-    const { user } = req.params;
-    const updateData = req.body;
-
-    if (!updateData || Object.keys(updateData).length === 0) {
-      return res.status(400).json({ message: "No data provided to update" });
-    }
-
-    const updatedInfo = await UserModel.findOneAndUpdate(
-      { username: String(user) },
-      updateData,
-      { new: true }
-    );
-
-    if (updatedInfo) {
-      console.log(`Info updated: ${JSON.stringify(updatedInfo)}`);
-      res
-        .status(200)
-        .json({ message: "Info updated successfully", updatedInfo });
-    } else {
-      res.status(404).json({ message: "Info not found" });
-    }
-  } catch (error) {
-    console.error("Error updating user info:", error);
-    res.status(500).json({ message: "Server error, please try again later" });
   }
 });
 

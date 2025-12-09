@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const getUser = createAsyncThunk("users/getUser", async (udata) => {
   try {
-    const response = await axios.post("http://localhost:4040/login", udata);
+    const response = await axios.post("https://novacomputer-server.onrender.com/login", udata);
     return response.data;
   } catch (error) {
     throw new Error("Get User Failed");
@@ -12,7 +12,7 @@ export const getUser = createAsyncThunk("users/getUser", async (udata) => {
 
 export const addUser = createAsyncThunk("users/addUser", async (udata) => {
   try {
-    const response = await axios.post("http://localhost:4040/register", udata);
+    const response = await axios.post("https://novacomputer-server.onrender.com/register", udata);
     return response.data.message;
   } catch (error) {
     throw new Error("Add User Failed");

@@ -12,7 +12,6 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.users.user);
     const isSuccess = useSelector((state) => state.users.isSuccess);
     const isError = useSelector((state) => state.users.isError);
     const navigate = useNavigate();
@@ -61,7 +60,7 @@ const startOneMinuteTimer = () => {
 
 
     useEffect(() => {
-        if (user && isSuccess){
+        if (userData && isSuccess){
             document.cookie = "isLogedin=true; path=/;";
             localStorage.setItem("userData", JSON.stringify(userData));
             navigate("/profile");
@@ -71,7 +70,7 @@ const startOneMinuteTimer = () => {
             setShow(true);
             errorCount >= 5 ? startOneMinuteTimer() : null;
         }  
-    }, [user, isSuccess, isError, navigate , message , errorCount ]);
+    }, [userData, isSuccess, isError, navigate , message , errorCount ]);
 
 
 
@@ -155,6 +154,15 @@ const startOneMinuteTimer = () => {
                                         No Account ? {'  '}
                                         <Link to="/register" className="text-blue-400 text-decoration-none">
                                             Sign Up Now
+                                        </Link>
+                                    </Label>
+                                </FormGroup>
+
+                                <FormGroup className="text-center">
+                                    <Label className="text-light">
+                                        An Admin ? {'  '}
+                                        <Link to="/AdminLogin" className="text-blue-400 text-decoration-none">
+                                            Go Here
                                         </Link>
                                     </Label>
                                 </FormGroup>
