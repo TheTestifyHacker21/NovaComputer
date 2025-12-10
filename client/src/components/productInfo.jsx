@@ -49,12 +49,15 @@ const ProductInfo = () => {
 
   
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
+
+    localStorage.setItem( "cart"  , JSON.stringify(cart));
+
   }, [cart]);
 
 
   
   function addToCart(product) {
+    
     const item = cart.find((i) => i._id === product._id);
 
     if (item) {
@@ -72,6 +75,7 @@ const ProductInfo = () => {
       alert("New item added ➕➕✅");
     }
   }
+
 
 
 
@@ -94,6 +98,7 @@ const incrementQty = (id) => {
 
 
 const decrementQty = (id) => {
+
   const updatedCart = cart.map((item) => {
     if (item._id === id) {
       return { ...item, qty: item.qty - 1 };
@@ -109,8 +114,11 @@ const decrementQty = (id) => {
 
 
 const removeItem = (id) => {
+
   const newCart = cart.filter((item) => item._id !== id);
+
   setCart(newCart);
+  
 };
 
 

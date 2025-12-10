@@ -47,6 +47,12 @@ export const UserSlice = createSlice({
       state.enableBtn = false;
       state.errorCount = 0;
     },
+
+    resetData: (state) => {
+      state.isSuccess = false;
+    },
+
+
   },
   extraReducers: (builder) => {
     builder
@@ -91,6 +97,6 @@ export const UserSlice = createSlice({
 
 
 
-export const { setTimer, clearTimer } = UserSlice.actions;
+export const { setTimer, clearTimer , resetData} = UserSlice.actions;
 export default UserSlice.reducer;
 

@@ -81,19 +81,6 @@ myApp.get("/products", async (req, res) => {
 
 
 
-myApp.get("/unsetpcode", async (req, res) => {
-  try {
-    const products = await prodModel.updateMany({}, { $unset: { pcode: "" } });
-    res.send(products);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error, please try again later" });
-  }
-});
-
-
-
-
 myApp.get("/allusers", async (req, res) => {
   try {
     const users = await UserModel.find();
@@ -106,9 +93,9 @@ myApp.get("/allusers", async (req, res) => {
 
 
 
-myApp.get("/alladmin", async (req, res) => {
+myApp.get("/allorders", async (req, res) => {
   try {
-    const users = await adminModel.find();
+    const users = await ordersModel.find();
     res.status(200).json(users);
   } catch (error) {
     console.error(error);
@@ -144,34 +131,6 @@ myApp.post("/adminlogin",async(req,res)=>{
 
 
 
-myApp.post("/adminregister",async(req,res)=>{
-    try{
-        const user=await adminModel.findOne({adminemail:req.body.adminemail});
-        if(user)
-            res.status(401).json({message:"admin already exists"});
-        else{
-            const hpass = await bcrypt.hash(req.body.password,10);
-            const newuser = new adminModel({
-                adminemail:req.body.adminemail,
-                password:hpass,
-            });
-            await newuser.save();
-            res.send({message:"Admin Registered.."});
-        }
-        
-    }
-    catch(error){
-       res.send({message:"An error occurred" , theerror:error});
-    }
-});
-
-
-
-
-
-
-
-
 
 
 myApp.put('/products/:id', async (req, res) => {
@@ -192,6 +151,8 @@ myApp.put('/products/:id', async (req, res) => {
     res.status(500).json({ message: "Server error, please try again later." });
   }
 });
+
+
 
 
 
@@ -223,47 +184,66 @@ myApp.post("/addProduct", async (req, res) => {
 
 
 
-myApp.put("/productUpdate/:pcode", async (req, res) => {
+myApp.delete("/products/:id", async (req, res) => {
   try {
-    const pcode = req.params.pcode;
-    const updateData = req.body;
+    const productId = req.params.id;
 
-    const updatedProduct = await prodModel.findOneAndUpdate(
-        pcode,
-        updateData,
-        { new: true }
-    );
+    const deletedProduct = await prodModel.findByIdAndDelete(productId);
 
-    if (updatedProduct) {
-      console.log(`Product updated:`);
-      res.status(200).json({ message: "Product updated successfully", updatedProduct });
-    } else {
-      res.status(404).json({ message: "Product not found" });
+    if (!deletedProduct) {
+      return res.status(404).json({ message: "Product not found" });
     }
-  } catch (error) {
-    console.error("Error updating product:", error);
-    res.status(500).json({ message: "Server error, please try again later" });
-  }
-});
 
-
-
-
-
-myApp.get("/orders/:user", async (req, res) => {
-  try {
-    const user = req.params.user;
-    const orders = await ordersModel.find({ user: user });
-    if (orders.length > 0) {
-      res.json(orders);
-    } else {
-      res.status(404).json({ message: "orders not found" });
-    }
+    res.status(200).json({ message: "Product deleted successfully", id: productId });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error, please try again" });
   }
 });
+
+
+
+
+myApp.post("/orders", async (req, res) => {
+  try {
+    const email = req.body.email;
+    const OrderDate = req.body.OrderDate;
+    const price = req.body.price;
+    const address = req.body.address;
+    const city = req.body.city;
+    const productInfo = req.body.productInfo;
+
+
+    const newOrder = new ordersModel({
+      email,
+      OrderDate,
+      price,
+      address,
+      city,
+      productInfo,
+    });
+    await newOrder.save();
+
+    for (let i = 0; i < productInfo.length; i++) {
+      const productId = productInfo[i].productId;
+      const quantityOrdered = productInfo[i].quantity;
+
+      const product = await prodModel.findById(productId);
+
+      if (product) {
+        product.pstock = product.pstock - quantityOrdered;
+        product.inStock = product.pstock > 0;
+        await product.save();
+      }
+    }
+
+    res.status(201).json({ message: "Order placed successfully", order: newOrder });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error, please try again" });
+  }
+});
+
 
 
 

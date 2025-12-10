@@ -88,7 +88,6 @@ const AdminDashboard = () => {
       setEditMode(false);
       setSelectedProduct(null);
 
-      setPcode(0);
       setPname("");
       setCategory("");
       setPinformation("");

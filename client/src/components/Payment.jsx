@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import {
   Container,
@@ -12,6 +13,8 @@ import {
   Input,
   Button,
   Card,
+  Spinner,
+  Alert,
   CardBody,
 } from "reactstrap";
 import { FaCreditCard } from "react-icons/fa";
@@ -30,6 +33,16 @@ const Payment = () => {
   const [taxRate, setTaxRate] = useState(0.1);
   const [shippingCost, setShippingCost] = useState(0);
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [show, setShow] = useState(false);
+
+  const [alertMsg, setalertMsg] = useState("");
+
+  const onClose = () => setShow(false);
+
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit: submitForm,
@@ -40,7 +53,7 @@ const Payment = () => {
 
   const [cart, setCart] = useState(() => {
     const saved = localStorage.getItem("cart");
-    return saved ? JSON.parse(saved) : [];
+    return JSON.parse(saved);
   });
 
   const calculateSubtotal = () => {
@@ -74,30 +87,71 @@ const Payment = () => {
 
   const cityOptions = validZipData.map((item) => item.city);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const savedUserinfo = localStorage.getItem("userData");
 
-    const savedUserinfo = localStorage.getItem("cart");
+    if (!savedUserinfo) {
+      alert("Please log in to proceed with the payment.");
+      navigate("/login");
+      return;
+    }
 
     const savedUser = JSON.parse(savedUserinfo);
 
     const savedUserName = savedUser.email;
 
+    const productInfo = cart.map((item) => ({
+      productId: item._id,
+      quantity: item.qty,
+      productName: item.pname,
+      price: item.price,
+      totalPrice: item.price * item.qty,
+    }));
 
-    const data = {
-      address,
-      city,
-      zipCode,
-      cardNumber,
-      expiryDate,
-      cvv,
+    const dataToSave = {
+      email: savedUserName,
+      OrderDate: new Date(),
+      price: total,
+      address: address,
+      city: city,
+      productInfo: productInfo,
     };
 
+    setIsLoading(true);
 
-
+    try {
+      const apiurl = "http://localhost:4040/orders";
+      const response = await axios.post(apiurl, dataToSave);
+      navigate("/profile");
+    } catch (error) {
+      console.error("Order submission error:", error);
+      setalertMsg("Order submission failed.");
+      setShow(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="min-vh-100 text-light">
+      <Alert
+        color="danger"
+        isOpen={show}
+        fade={true}
+        toggle={onClose}
+        style={{
+          position: "fixed",
+          bottom: "3rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+          minWidth: "250px",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          fontFamily: "Poppins, sans-serif",
+          textAlign: "center",
+        }}
+      >
+        {alertMsg}
+      </Alert>
       <Container className="py-5">
         <h1 className="text-white mb-4">Checkout</h1>
 
@@ -274,7 +328,14 @@ const Payment = () => {
                     size="lg"
                     className="w-100 mt-4"
                   >
-                    Place Order
+                    {isLoading ? (
+                      <>
+                        <Spinner size="sm">Loading...</Spinner>
+                        <span> Loading</span>
+                      </>
+                    ) : (
+                      "Place Order"
+                    )}
                   </Button>
 
                   <FormGroup className="text-center mt-5">
@@ -282,7 +343,7 @@ const Payment = () => {
                       to="/products"
                       className="text-white text-decoration-none bg-danger p-2 rounded-2 fw-semibold"
                     >
-                      Back To Home
+                      Back To Products
                     </Link>
                   </FormGroup>
                 </form>
@@ -302,7 +363,7 @@ const Payment = () => {
                   <div key={item._id} className="mb-3">
                     <div className="d-flex justify-content-between text-light mb-2">
                       <span>
-                        {item.pname} &nbsp; &nbsp; ( x  {item.qty} )
+                        {item.pname} &nbsp; &nbsp; ( x {item.qty} )
                       </span>
                       <span>${(item.price * item.qty).toFixed(2)}</span>
                     </div>

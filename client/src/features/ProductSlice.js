@@ -18,7 +18,7 @@ export const getProducts = createAsyncThunk("products/getProducts", async () => 
 
 export const updateProduct = createAsyncThunk("products/updateProduct", async ({ id, productData }) => {
     try {
-        const response = await axios.put(`http://localhost:4040/products/${id}`, productData);
+        const response = await axios.put(`https://novacomputer-server.onrender.com/products/${id}`, productData);
         return { 
             id, 
             product: response.data.product,
@@ -44,9 +44,10 @@ export const saveProduct = createAsyncThunk("products/saveProduct", async (produ
 });
 
 
+
 export const deleteProduct = createAsyncThunk("products/deleteProduct", async (id) => {
     try {
-        await axios.delete(`http://localhost:4040/products/${id}`);
+        await axios.delete(`https://novacomputer-server.onrender.com/products/${id}`);
         return id;
     }
     catch(error) {

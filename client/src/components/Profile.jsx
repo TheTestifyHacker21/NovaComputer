@@ -24,6 +24,18 @@ const Profile = () => {
   const [alertMsg, setAlertMsg] = useState("");
 
 
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
+
+
+    if (!user) {
+    return null;
+  }
+
   return (
     <div className="d-flex align-items-center justify-content-center mt-5 mb-5">
       <Alert

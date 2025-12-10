@@ -50,10 +50,10 @@ const validate = async () => {
         const response = await axios.post(apiurl, loginData); 
 
         localStorage.removeItem("userData");
+        localStorage.setItem("isLoggedIn", "false");
+        localStorage.setItem("isAdminLoggedIn", "true");
+        
 
-        document.cookie = "isLogedin=false; path=/;";
-
-        document.cookie = "AdminisLogedin=true; path=/;";
 
         navigate("/");
         
