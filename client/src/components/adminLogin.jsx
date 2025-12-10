@@ -39,7 +39,7 @@ const AdminLogin = () => {
 const validate = async () => { 
 
     setShow(false);
-    const apiurl = "http://localhost:4040/adminlogin";
+    const apiurl = "https://novacomputer-server.onrender.com/adminlogin";
     
     const loginData = {
         adminemail: email,

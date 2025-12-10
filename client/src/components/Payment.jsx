@@ -120,7 +120,7 @@ const Payment = () => {
     setIsLoading(true);
 
     try {
-      const apiurl = "http://localhost:4040/orders";
+      const apiurl = "https://novacomputer-server.onrender.com/orders";
       const response = await axios.post(apiurl, dataToSave);
       navigate("/profile");
     } catch (error) {
