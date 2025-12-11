@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 const Stores = () => {
+
   const [location, setLocation] = useState(null);
   const [nearestStore, setNearestStore] = useState(null);
 
@@ -43,7 +44,7 @@ const Stores = () => {
     const totalDiff = latDiff + lngDiff;
     
     // Convert to approximate miles (this is a simplified conversion)
-    return (totalDiff * 69).toFixed(1); // Rough conversion to miles
+    return (totalDiff * 69).toFixed(1); 
   };
 
   // Find nearest store
@@ -200,24 +201,6 @@ const Stores = () => {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .hover-bg-light:hover {
-          background-color: #495057 !important;
-        }
-        
-        .transition {
-          transition: all 0.3s ease;
-        }
-        
-        .bg-dark {
-          background-color: #1a1d20 !important;
-        }
-        
-        .bg-secondary {
-          background-color: #2d3035 !important;
-        }
-      `}</style>
     </div>
   );
 };

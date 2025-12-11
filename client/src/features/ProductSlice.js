@@ -66,6 +66,7 @@ const initVal = {
     isError: false
 }
 
+
 export const ProductSlice = createSlice({
     name: "products",
     initialState: initVal,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Container,
   Row,
@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser , resetData} from "../features/UserSlice";
+import { addUser, resetData } from "../features/UserSlice";
 import { RegisterSchema } from "../validations/RegisterSchema";
 
 const Register = () => {
@@ -41,21 +41,17 @@ const Register = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(RegisterSchema),
+    mode: "onChange",
   });
 
-  const validate = () => {
-    const data = {
-      uname: name,
-      email: email,
-      password: password,
-      profilepic: Prifilepic
-        ? Prifilepic
-        : "https://thumbs.dreamstime.com/b/faceless-male-avatar-hoodie-illustration-minimalist-default-photo-placeholder-wearing-light-gray-background-ideal-377566416.jpg",
-    };
+  const validate = (data) => {
+
+    if (!data.profilePic || data.profilePic === "") {
+    data.profilePic = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnSSxXHLqu5lsHYkFlZkvXuo2ZamNvdqLiCg&s"; 
+  }
+
     dispatch(addUser(data));
   };
-
-
 
   useEffect(() => {
     if (isSuccess) {
@@ -67,8 +63,6 @@ const Register = () => {
     }
   }, [isSuccess, isError, message, navigate]);
 
-
-  
   return (
     <div className="d-flex align-items-center justify-content-center mt-5 mb-5">
       <Alert
@@ -101,13 +95,14 @@ const Register = () => {
 
               <form className="div-form">
                 <FormGroup>
-                  <Label className="text-light mb-2">Username</Label>
+                  <Label className="text-light mb-2" for="name">Username</Label>
                   <input
                     {...register("name", {
                       value: name,
                       onChange: (e) => setName(e.target.value),
                     })}
                     type="text"
+                    id="name"
                     className="form-control bg-slate-700 border-slate-600 text-white"
                     style={{
                       backgroundColor: "#374151",
@@ -121,13 +116,14 @@ const Register = () => {
                 </FormGroup>
 
                 <FormGroup>
-                  <Label className="text-light mb-2">Email</Label>
+                  <Label className="text-light mb-2" for="email">Email</Label>
                   <input
                     {...register("email", {
                       value: email,
                       onChange: (e) => setEmail(e.target.value),
                     })}
                     type="email"
+                    id="email"
                     className="form-control bg-slate-700 border-slate-600 text-white"
                     style={{
                       backgroundColor: "#374151",
@@ -141,13 +137,14 @@ const Register = () => {
                 </FormGroup>
 
                 <FormGroup>
-                  <Label className="text-light mb-2">Password</Label>
+                  <Label className="text-light mb-2" for="password">Password</Label>
                   <input
                     {...register("password", {
                       value: password,
                       onChange: (e) => setPassword(e.target.value),
                     })}
                     type="password"
+                    id="password"
                     className="form-control bg-slate-700 border-slate-600 text-white"
                     style={{
                       backgroundColor: "#374151",
@@ -161,13 +158,14 @@ const Register = () => {
                 </FormGroup>
 
                 <FormGroup>
-                  <Label className="text-light mb-2">Confirm Password</Label>
+                  <Label className="text-light mb-2" for="cpassword">Confirm Password</Label>
                   <input
                     {...register("confirmPassword", {
                       value: confirmPassword,
                       onChange: (e) => setConfirmPassword(e.target.value),
                     })}
                     type="password"
+                    id="cpassword"
                     className="form-control bg-slate-700 border-slate-600 text-white"
                     style={{
                       backgroundColor: "#374151",
@@ -185,15 +183,18 @@ const Register = () => {
                 <FormGroup>
                   <Label className="text-light mb-2">Profile Picture</Label>
                   <input
+                    {...register("profilePic")}
                     type="text"
                     className="form-control bg-slate-700 border-slate-600 text-white"
-                    onChange={(e) => setPic(e.target.value)}
                     style={{
                       backgroundColor: "#374151",
                       borderColor: "#4B5563",
                       color: "white",
                     }}
                   />
+                  <p className="mt-3 mb-0" style={{ color: "#FF3838" }}>
+                    {errors.profilePic?.message}
+                  </p>
                 </FormGroup>
 
                 <FormGroup>

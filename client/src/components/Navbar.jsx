@@ -19,11 +19,7 @@ const Navbar = () => {
   const AdminisLogedin = localStorage.getItem("isAdminLoggedIn") === "true";
 
   // 👉 Decide where the Profile/Login button should go
-  const whereHref = AdminisLogedin 
-    ? "/AdminDashboard" 
-    : isLogedin 
-      ? "/profile" 
-      : "/login";
+  const whereHref = AdminisLogedin ? "/AdminDashboard" : isLogedin ? "/profile" : "/login";
 
   return (
     <nav className="navbar shadow-lg py-3" style={{ backgroundColor: "#0F172A" }}>

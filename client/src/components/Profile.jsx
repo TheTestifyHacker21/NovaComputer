@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Container,
   Row,
@@ -32,9 +32,18 @@ const Profile = () => {
   }, [user, navigate]);
 
 
+
     if (!user) {
-    return null;
+    return "nothing";
   }
+
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
+
 
   return (
     <div className="d-flex align-items-center justify-content-center mt-5 mb-5">

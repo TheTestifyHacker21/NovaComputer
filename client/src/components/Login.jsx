@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import {
   Container,
   Row,
@@ -40,25 +40,26 @@ const Login = () => {
     register,
     handleSubmit: submitForm,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(LoginSchema) });
+  } = useForm({ resolver: yupResolver(LoginSchema) , mode: "onChange" });
 
-  const validate = () => {
-    const data = {
-      email: email,
-      password: password,
-    };
+  const validate = (data) => {
     dispatch(getUser(data));
   };
 
   
   const startOneMinuteTimer = () => {
+
     dispatch(clearTimer());
+
     const id = setTimeout(() => {
       dispatch(clearTimer());
     }, 60000);
-    dispatch(setTimer(id));
-  };
 
+    console.log("Timer start");
+
+    dispatch(setTimer(id));
+
+  };
 
 
   useEffect(() => {
@@ -110,13 +111,14 @@ const Login = () => {
 
               <form className="div-form">
                 <FormGroup>
-                  <Label className="text-light mb-2">Email</Label>
+                  <Label className="text-light mb-2" for="email">Email</Label>
                   <input
                     {...register("email", {
                       value: email,
                       onChange: (e) => setEmail(e.target.value),
                     })}
                     type="email"
+                    id="email"
                     className="form-control bg-slate-700 border-slate-600 text-white"
                     style={{
                       backgroundColor: "#374151",
@@ -130,13 +132,14 @@ const Login = () => {
                 </FormGroup>
 
                 <FormGroup>
-                  <Label className="text-light mb-2">Password</Label>
+                  <Label className="text-light mb-2" for="password">Password</Label>
                   <input
                     {...register("password", {
                       value: password,
                       onChange: (e) => setPassword(e.target.value),
                     })}
                     type="password"
+                    id="password"
                     className="form-control bg-slate-700 border-slate-600 text-white"
                     style={{
                       backgroundColor: "#374151",

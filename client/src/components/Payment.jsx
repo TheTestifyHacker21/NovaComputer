@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, useNavigate } from "react-router-dom";
@@ -53,10 +53,13 @@ const Payment = () => {
 
   const [cart, setCart] = useState(() => {
     const saved = localStorage.getItem("cart");
-    return JSON.parse(saved);
+    return saved ? JSON.parse(saved) : [];
   });
 
   const calculateSubtotal = () => {
+    if (!cart || cart.length === 0) {
+      return 0;
+    }
     let total = 0;
     cart.forEach((item) => {
       total += item.price * item.qty;

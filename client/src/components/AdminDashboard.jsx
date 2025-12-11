@@ -38,7 +38,6 @@ const AdminDashboard = () => {
   const [searchValue, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
 
-  const [pcode, setPcode] = useState(0);
   const [pname, setPname] = useState("");
   const [category, setCategory] = useState("");
   const [pinformation, setPinformation] = useState("");

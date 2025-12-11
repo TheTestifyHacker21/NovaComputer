@@ -104,6 +104,17 @@ myApp.get("/allorders", async (req, res) => {
 });
 
 
+myApp.get("/alladmins", async (req, res) => {
+  try {
+    const users = await adminModel.find();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error, please try again later" });
+  }
+});
+
+
 
 
 
@@ -125,9 +136,6 @@ myApp.post("/adminlogin",async(req,res)=>{
         res.send({message:"An error occurred" , theerror:error});
     }
 });
-
-
-
 
 
 
@@ -243,6 +251,27 @@ myApp.post("/orders", async (req, res) => {
     res.status(500).json({ message: "Server error, please try again" });
   }
 });
+
+
+
+
+
+
+myApp.get('/orders/:email', async (req, res) => {
+  try {
+    const allUsersOrder = await ordersModel.findOne({ email: req.params.email });
+
+    if (!allUsersOrder) {
+      return res.status(404).json({ message: "No Orders found" });
+    }
+
+    res.json({ message: "Orders Found successfully!", allUsersOrder: allUsersOrder  });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error, please try again later." });
+  }
+});
+
 
 
 

@@ -10,6 +10,7 @@ export const getUser = createAsyncThunk("users/getUser", async (udata) => {
   }
 });
 
+
 export const addUser = createAsyncThunk("users/addUser", async (udata) => {
   try {
     const response = await axios.post("https://novacomputer-server.onrender.com/register", udata);
@@ -56,6 +57,7 @@ export const UserSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
       .addCase(addUser.pending, (state, action) => {
         state.isLoading = true;
         state.errorCount = state.message.includes("Get") ? 0 : state.errorCount;
@@ -71,6 +73,8 @@ export const UserSlice = createSlice({
         state.isError = true;
         state.message = action.error.message;
       })
+
+      
       .addCase(getUser.pending, (state, action) => {
         state.isLoading = true;
         state.errorCount = state.message.includes("Add") ? 0 : state.errorCount;

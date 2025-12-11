@@ -44,7 +44,7 @@ const ProductInfo = () => {
   }, [productId, products, products, navigate]);
 
   if (!product) {
-    return null;
+    return "nothing";
   }
 
   
