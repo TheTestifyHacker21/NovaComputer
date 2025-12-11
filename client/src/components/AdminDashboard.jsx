@@ -102,7 +102,6 @@ const AdminDashboard = () => {
     setEditMode(true);
     setSelectedProduct(p);
 
-    setPcode(p.pcode);
     setPname(p.pname);
     setCategory(p.category);
     setPinformation(p.pinformation);

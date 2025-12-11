@@ -7,11 +7,12 @@ import {
   CardBody,
   CardTitle,
   CardText,
-  Button,
   Alert,
+  Table,
 } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import axios from "axios";
 
 const Profile = () => {
   const [user, setUser] = useState(
@@ -22,8 +23,7 @@ const Profile = () => {
 
   const [show, setShow] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
-
-
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     if (!user) {
@@ -31,19 +31,23 @@ const Profile = () => {
     }
   }, [user, navigate]);
 
+  useEffect(() => {
+    if (user) {
+      axios
+        .get(`https://novacomputer-server.onrender.com/orders/${user.email}`)
+        .then((res) => {
+          setOrders(res.data.allUsersOrder ? [res.data.allUsersOrder] : []);
+        })
+        .catch((err) => {
+          console.error(err);
+          setOrders([]);
+        });
+    }
+  }, [user]);
 
-
-    if (!user) {
+  if (!user) {
     return "nothing";
   }
-
-
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
-  }, [user, navigate]);
-
 
   return (
     <div className="d-flex align-items-center justify-content-center mt-5 mb-5">
@@ -94,6 +98,7 @@ const Profile = () => {
                 </div>
               </div>
 
+              {/* User Info */}
               <Card
                 className="mb-4"
                 style={{ backgroundColor: "#1e293b", borderColor: "#334155" }}
@@ -119,6 +124,8 @@ const Profile = () => {
                   </Row>
                 </CardBody>
               </Card>
+
+              {/* Account Details */}
               <Card
                 className="mb-4"
                 style={{ backgroundColor: "#1e293b", borderColor: "#334155" }}
@@ -137,6 +144,103 @@ const Profile = () => {
                       </CardText>
                     </Col>
                   </Row>
+                </CardBody>
+              </Card>
+
+              <Card
+                className="mb-4"
+                style={{ backgroundColor: "#1e293b", borderColor: "#334155" }}
+              >
+                <CardBody>
+                  <CardTitle style={{ color: "#60a5fa" }} className="mb-3">
+                    Orders
+                  </CardTitle>
+
+                  {orders.length === 0 ? (
+                    <p className="text-light">No orders found.</p>
+                  ) : (
+                    <Card
+                      className="mb-4"
+                      style={{
+                        backgroundColor: "#1e293b",
+                        borderColor: "#334155",
+                      }}
+                    >
+                      <CardBody>
+                        {orders.length === 0 ? (
+                          <p className="text-light">No orders found.</p>
+                        ) : (
+                          orders.map((order) => (
+                            <Card
+                              key={order._id}
+                              className="mb-3"
+                              style={{
+                                backgroundColor: "#0f172a",
+                                borderColor: "#334155",
+                              }}
+                            >
+                              <CardBody>
+                                <CardTitle style={{ color: "#60a5fa" }}>
+                                  Order ID:{" "}
+                                  <span style={{ color: "#9ca3af" }}>
+                                    {order._id}
+                                  </span>
+                                </CardTitle>
+                                <CardText className="text-light mb-2">
+                                  <strong>Date:</strong>{" "}
+                                  {new Date(
+                                    order.OrderDate
+                                  ).toLocaleDateString()}
+                                </CardText>
+                                <CardText className="text-light mb-2">
+                                  <strong>City:</strong> {order.city}
+                                </CardText>
+                                <CardText className="text-light mb-2">
+                                  <strong>Address:</strong> {order.address}
+                                </CardText>
+                                <CardText className="text-light mb-3">
+                                  <strong>Total Price:</strong> $
+                                  {order.price.toFixed(2)}
+                                </CardText>
+
+                                <CardTitle
+                                  style={{ color: "#60a5fa" }}
+                                  className="mb-2"
+                                >
+                                  Products
+                                </CardTitle>
+                                {order.productInfo.map((p) => (
+                                  <Card
+                                    key={p.productId}
+                                    className="mb-2"
+                                    style={{
+                                      backgroundColor: "#1e293b",
+                                      borderColor: "#334155",
+                                    }}
+                                  >
+                                    <CardBody>
+                                      <CardText className="text-light mb-1">
+                                        <strong>{p.productName}</strong>
+                                      </CardText>
+                                      <CardText className="text-light mb-1">
+                                        Quantity: {p.quantity}
+                                      </CardText>
+                                      <CardText className="text-light mb-1">
+                                        Price: ${p.price.toFixed(2)}
+                                      </CardText>
+                                      <CardText className="text-light">
+                                        Total: ${p.totalPrice.toFixed(2)}
+                                      </CardText>
+                                    </CardBody>
+                                  </Card>
+                                ))}
+                              </CardBody>
+                            </Card>
+                          ))
+                        )}
+                      </CardBody>
+                    </Card>
+                  )}
                 </CardBody>
               </Card>
 
