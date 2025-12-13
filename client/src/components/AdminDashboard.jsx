@@ -299,6 +299,7 @@ const AdminDashboard = () => {
                 <Input
                   value={pinformation}
                   onChange={(e) => setPinformation(e.target.value)}
+                  required
                 />
               </FormGroup>
 
@@ -308,6 +309,7 @@ const AdminDashboard = () => {
                   type="number"
                   value={pstock}
                   onChange={(e) => setPstock(Number(e.target.value))}
+                  required
                 />
               </FormGroup>
 
@@ -326,6 +328,7 @@ const AdminDashboard = () => {
                 <Input
                   value={imgUrl}
                   onChange={(e) => setImgUrl(e.target.value)}
+                  required
                 />
               </FormGroup>
 
@@ -334,6 +337,7 @@ const AdminDashboard = () => {
                   type="checkbox"
                   checked={inStock}
                   onChange={(e) => setInStock(e.target.checked)}
+                  required
                 />
                 <Label check>In Stock</Label>
               </FormGroup>
@@ -347,6 +351,7 @@ const AdminDashboard = () => {
                   value="new"
                   checked={condition === "new"}
                   onChange={(e) => setCondition(e.target.value)}
+                  required
                 />
 
                 <Label check>New</Label>
@@ -359,6 +364,7 @@ const AdminDashboard = () => {
                   value="used"
                   checked={condition === "used"}
                   onChange={(e) => setCondition(e.target.value)}
+                  required
                 />
 
                 <Label check>Used (10% discount)</Label>
