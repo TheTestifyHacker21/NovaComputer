@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-export const RegisterSchema = yup.object().shape({
+export const RegisterSchema = yup.object({
   uname: yup.string().required("username is required"),
   email: yup.string().email("Not valid email").required("Email is Required"),
   password: yup
