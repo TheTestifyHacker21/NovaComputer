@@ -17,11 +17,11 @@ import { addUser, resetData } from "../features/UserSlice";
 import { RegisterSchema } from "../validations/RegisterSchema";
 
 const Register = () => {
-  const [name, setName] = useState("");
+  const [uname, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [Prifilepic, setPic] = useState("");
+  const [profilepic, setPic] = useState("");
 
   const dispatch = useDispatch();
   const isSuccess = useSelector((state) => state.users.isSuccess);
@@ -46,8 +46,8 @@ const Register = () => {
 
   const validate = (data) => {
 
-    if (!data.profilePic || data.profilePic === "") {
-    data.profilePic = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnSSxXHLqu5lsHYkFlZkvXuo2ZamNvdqLiCg&s"; 
+    if (!data.profilepic || data.profilepic === "") {
+    data.profilepic = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnSSxXHLqu5lsHYkFlZkvXuo2ZamNvdqLiCg&s"; 
   }
 
     dispatch(addUser(data));
@@ -97,8 +97,8 @@ const Register = () => {
                 <FormGroup>
                   <Label className="text-light mb-2" for="name">Username</Label>
                   <input
-                    {...register("name", {
-                      value: name,
+                    {...register("uname", {
+                      value: uname,
                       onChange: (e) => setName(e.target.value),
                     })}
                     type="text"
@@ -183,7 +183,7 @@ const Register = () => {
                 <FormGroup>
                   <Label className="text-light mb-2">Profile Picture</Label>
                   <input
-                    {...register("profilePic")}
+                    {...register("profilepic")}
                     type="text"
                     className="form-control bg-slate-700 border-slate-600 text-white"
                     style={{
@@ -193,7 +193,7 @@ const Register = () => {
                     }}
                   />
                   <p className="mt-3 mb-0" style={{ color: "#FF3838" }}>
-                    {errors.profilePic?.message}
+                    {errors.profilepic?.message}
                   </p>
                 </FormGroup>
 

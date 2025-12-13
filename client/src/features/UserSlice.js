@@ -3,17 +3,22 @@ import axios from "axios";
 
 export const getUser = createAsyncThunk("users/getUser", async (udata) => {
   try {
-    const response = await axios.post("https://novacomputer-server.onrender.com/login", udata);
+    const response = await axios.post(
+      "https://novacomputer-server.onrender.com/login",
+      udata
+    );
     return response.data;
   } catch (error) {
     throw new Error("Get User Failed");
   }
 });
 
-
 export const addUser = createAsyncThunk("users/addUser", async (udata) => {
   try {
-    const response = await axios.post("https://novacomputer-server.onrender.com/register", udata);
+    const response = await axios.post(
+      "https://novacomputer-server.onrender.com/register",
+      udata
+    );
     return response.data.message;
   } catch (error) {
     throw new Error("Add User Failed");
@@ -52,8 +57,6 @@ export const UserSlice = createSlice({
     resetData: (state) => {
       state.isSuccess = false;
     },
-
-
   },
   extraReducers: (builder) => {
     builder
@@ -64,9 +67,14 @@ export const UserSlice = createSlice({
       })
       .addCase(addUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isSuccess = true;
-        state.message = action.payload;
-        state.isLogedin = false;
+        if (action.payload === "User Registered..") {
+          state.isSuccess = true;
+          state.message = action.payload;
+          state.isLogedin = false;
+        } else {
+          state.isError = true;
+          state.message = action.payload;
+        }
       })
       .addCase(addUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -74,7 +82,6 @@ export const UserSlice = createSlice({
         state.message = action.error.message;
       })
 
-      
       .addCase(getUser.pending, (state, action) => {
         state.isLoading = true;
         state.errorCount = state.message.includes("Add") ? 0 : state.errorCount;
@@ -99,8 +106,5 @@ export const UserSlice = createSlice({
   },
 });
 
-
-
-export const { setTimer, clearTimer , resetData} = UserSlice.actions;
+export const { setTimer, clearTimer, resetData } = UserSlice.actions;
 export default UserSlice.reducer;
-

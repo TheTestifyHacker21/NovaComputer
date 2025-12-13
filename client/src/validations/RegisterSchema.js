@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
 export const RegisterSchema = yup.object().shape({
-  name: yup.string().required("username is required"),
+  uname: yup.string().required("username is required"),
   email: yup.string().email("Not valid email").required("Email is Required"),
   password: yup
     .string()
@@ -12,5 +12,5 @@ export const RegisterSchema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password"), null], "Passwords must match")
     .required("Confirm Password is required"),
-  profilePic: yup.string().notRequired(),
+  profilepic: yup.string().notRequired(),
 });
