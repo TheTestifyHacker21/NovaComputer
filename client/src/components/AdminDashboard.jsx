@@ -117,17 +117,18 @@ const AdminDashboard = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const finalPrice =
-      condition === "used" ? Number(price) * 0.9 : Number(price);
+    const finalPrice = condition === "used" ? Number(price) * 0.9 : Number(price);
+
+    const inStockValue = Number(pstock) > 0;
 
     const productData = {
       pname,
       category,
       pinformation,
-      pstock,
+      pstock : Number(pstock),
       price: finalPrice,
       imgUrl,
-      inStock,
+      inStock: inStockValue,
     };
 
     if (editMode && selectedProduct) {
